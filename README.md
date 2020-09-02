@@ -38,8 +38,8 @@ import { doSomething } from '~/src/util';
 import { doSomething } from '~/src/util';
 ```
 
-The `tsconfig.json` would need to be modified to have the following `paths`
-property similar to the following:
+The `tsconfig.json` should be modified to have a `paths` property similar to the
+following:
 
 ```json
 {
@@ -73,11 +73,11 @@ This project exposes two commands:
 ## Installation
 
 ```sh
-npm install -D @philidem/rewrite-project-paths
+npm install -D @philidem/rewrite-relative-paths
 ```
 
 ```sh
-yarn add --dev @philidem/rewrite-project-paths
+yarn add --dev @philidem/rewrite-relative-paths
 ```
 
 ## Usage
