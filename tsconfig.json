@@ -10,5 +10,6 @@
     "incremental": true,
     "tsBuildInfoFile": "dist/.tsc/tsconfig.tsbuildinfo"
   },
-  "include": ["src/**/*.ts", "test/**/*.ts", "*.js"]
+  "include": ["src/**/*.ts", "test/**/*.ts", "*.js"],
+  "exclude": ["test/work/**/*"]
 }

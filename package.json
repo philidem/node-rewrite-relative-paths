@@ -4,6 +4,11 @@
   "description": "Tool for rewriting paths in import and require statements that start with ~",
   "author": "Phil Gates-Idem <phillip.idem@gmail.com>",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/philidem/node-rewrite-relative-paths.git"
+  },
+  "homepage": "https://github.com/philidem/node-rewrite-relative-paths",
   "bin": {
     "rewrite-imports": "./bin/rewrite-imports",
     "rewrite-requires": "./bin/rewrite-requires"
@@ -12,12 +17,16 @@
     "precommit": "lint-staged",
     "compile": "tsc -d -p tsconfig.dist.json",
     "clean": "rm -rf ./dist",
-    "build": "yarn clean && yarn compile && cp -R package.json yarn.lock ./src/bin ./dist/src",
+    "build": "yarn clean && yarn compile && cp -R package.json yarn.lock LICENSE README.md ./src/bin ./dist/src",
     "autobuild": "yarn build && (cd ./dist/src && yarn install --production && (yarn unlink || true) && yarn link) && yarn nodemon --exec 'yarn compile' --watch ./src -e ts",
     "lint": "eslint --ext .ts,.tsx,.js,.jsx .",
     "format-code": "prettier --write '**/*.{js,ts,md,json}'",
     "pretest": "rm -rf ./test/work && mkdir -p ./test/work && cp -R ./test/fixtures/fake-project ./test/work",
-    "test": "jest ."
+    "test": "jest .",
+    "publish:prepare": "yarn build && yarn test",
+    "publish:patch": "yarn publish:prepare && npm version patch && yarn build && npm publish --access public ./dist/src",
+    "publish:minor": "yarn publish:prepare && npm version minor && yarn build && npm publish --access public ./dist/src",
+    "publish:major": "yarn publish:prepare && npm version major && yarn build && npm publish --access public ./dist/src"
   },
   "devDependencies": {
     "@jupiterone/typescript-tools": "^12.0.0",
