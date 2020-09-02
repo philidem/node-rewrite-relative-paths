@@ -1,0 +1,7 @@
+#!/usr/bin/env node
+
+const {run} = require('../cli/rewrite-requires');
+
+run().catch(err => {
+  console.error(chalk.red(`${chalk.bold('Error running command')}. Error: ${err.stack}`));
+});

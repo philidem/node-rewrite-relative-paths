@@ -1,0 +1,9 @@
+dist/
+*.log
+coverage/
+node_modules/
+work/
+tmp/
+
+*.bak.*
+*.bak

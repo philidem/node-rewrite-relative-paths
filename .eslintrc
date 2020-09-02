@@ -1,0 +1,10 @@
+{
+  "root": true,
+  "extends": [
+    "./node_modules/@jupiterone/typescript-tools/config/eslint-node.json"
+  ],
+  "parserOptions": {
+    "project": "./tsconfig.json",
+    "tsconfigRootDir": "."
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "name": "fake-project",
+  "scripts": {
+    "build": "tsc -d"
+  },
+  "devDependencies": {
+    "typescript": "^4.0.2"
+  }
+}
