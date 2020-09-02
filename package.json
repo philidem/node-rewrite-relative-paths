@@ -1,7 +1,15 @@
 {
   "name": "@philidem/rewrite-relative-paths",
   "version": "1.0.3",
-  "description": "Tool for rewriting paths in import and require statements that start with ~",
+  "description": "Tool for making import paths relative to project root and making require paths relative",
+  "keywords": [
+    "typescript",
+    "import",
+    "require",
+    "relative",
+    "rewrite",
+    "paths"
+  ],
   "author": "Phil Gates-Idem <phillip.idem@gmail.com>",
   "license": "MIT",
   "repository": {
@@ -23,10 +31,11 @@
     "format-code": "prettier --write '**/*.{js,ts,md,json}'",
     "pretest": "rm -rf ./test/work && mkdir -p ./test/work && cp -R ./test/fixtures/fake-project ./test/work",
     "test": "jest .",
-    "publish:prepare": "yarn build && yarn test",
-    "publish:patch": "yarn publish:prepare && npm version patch && yarn build && npm publish --access public ./dist/src",
-    "publish:minor": "yarn publish:prepare && npm version minor && yarn build && npm publish --access public ./dist/src",
-    "publish:major": "yarn publish:prepare && npm version major && yarn build && npm publish --access public ./dist/src"
+    "publish:patch": "yarn version --patch",
+    "publish:minor": "yarn version --minor",
+    "publish:major": "yarn version --major",
+    "preversion": "yarn test",
+    "postversion": "yarn build && yarn publish --access public --new-version $npm_package_version ./dist/src"
   },
   "devDependencies": {
     "@jupiterone/typescript-tools": "^12.0.0",

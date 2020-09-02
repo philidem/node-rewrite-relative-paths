@@ -79,10 +79,23 @@ yarn add --dev @philidem/rewrite-project-paths
 
 ## Usage
 
+**Rewrite `import` statements in source files to use paths relative to project
+root:**
+
 ```sh
 # Using yarn
 yarn rewrite-imports --dir .
 
 # Using npm
 npm run rewrite-imports --dir .
+```
+
+**Rewrite `require` statements in compiled \*.js files to use relative paths:**
+
+```sh
+# Using yarn
+yarn rewrite-requires --dir ./dist
+
+# Using npm
+npm run rewrite-requires --dir ./dist
 ```
