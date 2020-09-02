@@ -1,6 +1,6 @@
 {
   "name": "@philidem/rewrite-relative-paths",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Tool for rewriting paths in import and require statements that start with ~",
   "author": "Phil Gates-Idem <phillip.idem@gmail.com>",
   "license": "MIT",
