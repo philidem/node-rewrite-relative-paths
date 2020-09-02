@@ -59,13 +59,16 @@ will still appear in the output `*.js` files. To fix the output `*.js` files you
 will need to rewrite the `require(...)` statements so that the paths become
 relative again.
 
-This project exposes to utility functions:
+This project exposes two commands:
 
 - `rewrite-imports`: Rewrites source `*.ts` files so that paths with `import`
-  statements using `../` are rewritten to use `~/`.
+  statements using `../` are rewritten to use `~/`. You can run this command in
+  directory that contains `*.ts` so that ugly `../` paths will be rewritten and
+  then can be committed to your source code repository.
 
 - `rewrite-requires`: Rewrites compiled `*.js` files so that paths in `require`
-  statements using `~/` are rewritten to use `../`.
+  statements are rewritten to always use relative paths. You can run this
+  command after compiling typescript files to a target directory.
 
 ## Installation
 
