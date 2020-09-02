@@ -1,6 +1,6 @@
 {
   "name": "@philidem/rewrite-relative-paths",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Tool for rewriting paths in import and require statements that start with ~",
   "author": "Phil Gates-Idem <phillip.idem@gmail.com>",
   "license": "MIT",
@@ -21,7 +21,7 @@
   },
   "devDependencies": {
     "@jupiterone/typescript-tools": "^12.0.0",
-    "ts-node": "^9.0.0"
+    "nodemon": "^2.0.4"
   },
   "dependencies": {
     "chalk": "^4.1.0",
