@@ -1,6 +1,6 @@
 {
   "name": "@philidem/rewrite-relative-paths",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Tool for making import paths relative to project root and making require paths relative",
   "keywords": [
     "typescript",
