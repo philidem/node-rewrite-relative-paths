@@ -11,7 +11,7 @@ export async function run() {
     })
     .option('monorepo', {
       type: 'boolean',
-      required: true,
+      required: false,
     })
     .option('h', {
       alias: 'help',
