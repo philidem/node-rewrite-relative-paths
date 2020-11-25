@@ -9,11 +9,16 @@ export async function run() {
       type: 'string',
       required: true,
     })
+    .option('monorepo', {
+      type: 'boolean',
+      required: true,
+    })
     .option('h', {
       alias: 'help',
       type: 'boolean',
     }).argv as {
     dir?: string;
+    monorepo?: boolean;
     help?: boolean;
     _: string[];
   };
@@ -24,5 +29,7 @@ export async function run() {
 
   await rewriteImports({
     dir: input.dir!,
+    files: input._,
+    monorepo: input.monorepo === true,
   });
 }

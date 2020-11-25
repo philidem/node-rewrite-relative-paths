@@ -3,7 +3,7 @@ import fs from 'fs';
 import { promises as fsPromises } from 'fs';
 import chalk from 'chalk';
 import ignore from 'ignore';
-import { dirname, resolve } from 'path';
+import { dirname, resolve, join, sep } from 'path';
 
 const { readFile, writeFile } = fsPromises;
 
@@ -25,11 +25,11 @@ function fixFile(rootDir: string, file: string) {
   queue
     .add(async () => {
       let srcFile = file;
-      if (srcFile.startsWith(rootDir + '/')) {
+      if (srcFile.startsWith(rootDir + sep)) {
         srcFile = srcFile.substring(rootDir.length + 1);
       }
 
-      const dir = '/' + dirname(srcFile);
+      const dir = sep + dirname(srcFile);
       const oldContents = await readFile(file, { encoding: 'utf8' });
       const newContents = oldContents
         .replace(DOUBLE_QUOTE_REGEXP, createReplacer(dir))
@@ -68,7 +68,11 @@ async function createIgnoreFilter() {
   };
 }
 
-export default async function rewriteImports(options: { dir: string }) {
+export default async function rewriteImports(options: {
+  dir: string;
+  monorepo: boolean;
+  files?: string[];
+}) {
   const rootDir = resolve(process.cwd(), options.dir);
 
   console.log(
@@ -77,36 +81,56 @@ export default async function rewriteImports(options: { dir: string }) {
     )} so that they use ~/* convention...`
   );
 
-  const filter = await createIgnoreFilter();
-
-  await new Promise((resolve, reject) => {
-    Walker(rootDir)
-      .filterDir(function (dir: string, stats: fs.Stats) {
-        if (dir.startsWith(rootDir)) {
-          dir = dir.substring(rootDir.length);
+  function handleFile(file: string) {
+    if (!file.endsWith('.ts')) {
+      return;
+    }
+    if (options.monorepo) {
+      const packagesDir = join(rootDir, 'packages');
+      if (file.startsWith(packagesDir + sep)) {
+        const relativeFile = file.substring(packagesDir.length + 1);
+        const pos = relativeFile.indexOf(sep);
+        if (pos !== -1) {
+          const packageName = relativeFile.substring(0, pos);
+          fixFile(join(packagesDir, packageName), file);
         }
+      }
+    } else {
+      fixFile(rootDir, file);
+    }
+  }
 
-        if (dir.charAt(0) === '/') {
-          dir = dir.substring(1);
-        }
+  if (options?.files?.length) {
+    options.files.forEach(handleFile);
+  } else {
+    const filter = await createIgnoreFilter();
+    const startDir = options.monorepo ? join(rootDir, 'packages') : rootDir;
 
-        if (dir.length === 0) {
-          dir = '.';
-        }
+    await new Promise((resolve, reject) => {
+      Walker(startDir)
+        .filterDir(function (dir: string, stats: fs.Stats) {
+          if (dir.startsWith(rootDir)) {
+            dir = dir.substring(rootDir.length);
+          }
 
-        return filter.isIgnored(dir) ? false : true;
-      })
-      .on('file', function (file: string, stats: fs.Stats) {
-        if (file.endsWith('.ts')) {
-          fixFile(rootDir, file);
-        }
-      })
-      .on('end', function () {
-        resolve();
-      });
-  });
+          if (dir.charAt(0) === sep) {
+            dir = dir.substring(1);
+          }
 
-  await queue.onIdle();
+          if (dir.length === 0) {
+            dir = '.';
+          }
+
+          return filter.isIgnored(dir) ? false : true;
+        })
+        .on('file', handleFile)
+        .on('end', function () {
+          resolve(undefined);
+        });
+    });
+
+    await queue.onIdle();
+  }
 
   console.log(chalk.green(chalk.bold('Done!')));
 }

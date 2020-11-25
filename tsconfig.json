@@ -1,12 +1,9 @@
 {
-  "extends": "./node_modules/@jupiterone/typescript-tools/config/typescript",
+  "extends": "./node_modules/@jupiterone/typescript-tools/config/typescript-node12",
   "compilerOptions": {
     "rootDir": ".",
     "baseUrl": ".",
     "outDir": "dist",
-    "lib": ["ES2019", "DOM"],
-    "target": "ES2019",
-    "module": "commonjs",
     "incremental": true,
     "tsBuildInfoFile": "dist/.tsc/tsconfig.tsbuildinfo"
   },

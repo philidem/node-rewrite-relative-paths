@@ -38,7 +38,7 @@
     "postversion": "yarn build && yarn publish --access public --new-version $npm_package_version ./dist/src"
   },
   "devDependencies": {
-    "@jupiterone/typescript-tools": "^12.0.0",
+    "@jupiterone/typescript-tools": "^13.0.1",
     "nodemon": "^2.0.4"
   },
   "dependencies": {
