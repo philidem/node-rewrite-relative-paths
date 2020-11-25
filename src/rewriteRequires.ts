@@ -134,7 +134,7 @@ export default async function rewriteRequires(options: { dir: string }) {
         }
       })
       .on('end', function () {
-        resolve();
+        resolve(undefined);
       });
   });
 

@@ -1,6 +1,6 @@
 {
   "name": "@philidem/rewrite-relative-paths",
-  "version": "1.0.6",
+  "version": "1.1.1",
   "description": "Tool for making import paths relative to project root and making require paths relative",
   "keywords": [
     "typescript",
@@ -38,7 +38,7 @@
     "postversion": "yarn build && yarn publish --access public --new-version $npm_package_version ./dist/src"
   },
   "devDependencies": {
-    "@jupiterone/typescript-tools": "^12.0.0",
+    "@jupiterone/typescript-tools": "^13.0.1",
     "nodemon": "^2.0.4"
   },
   "dependencies": {

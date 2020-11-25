@@ -1,5 +1,6 @@
 {
   "name": "fake-project",
+  "license": "MIT",
   "scripts": {
     "build": "tsc -d"
   },
