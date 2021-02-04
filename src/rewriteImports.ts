@@ -82,7 +82,7 @@ export default async function rewriteImports(options: {
   );
 
   function handleFile(file: string) {
-    if (!file.endsWith('.ts')) {
+    if (!file.endsWith('.ts') && !file.endsWith('.tsx')) {
       return;
     }
     if (options.monorepo) {

@@ -128,6 +128,8 @@ export default async function rewriteRequires(options: { dir: string }) {
         if (
           file.endsWith('.js') ||
           file.endsWith('.ts') ||
+          file.endsWith('.jsx') ||
+          file.endsWith('.tsx') ||
           file.indexOf('.') === -1
         ) {
           fixFile(rootDir, file);
