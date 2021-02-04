@@ -1,6 +1,6 @@
-import path from 'path';
-import { promises as fsPromises } from 'fs';
 import child_process from 'child_process';
+import { promises as fsPromises } from 'fs';
+import path from 'path';
 import { rewriteImports, rewriteRequires } from '../src';
 
 const { readFile } = fsPromises;
@@ -20,6 +20,7 @@ function build() {
 beforeAll(async () => {
   await rewriteImports({
     dir: fakeProjectDir,
+    monorepo: false,
   });
 
   build();
