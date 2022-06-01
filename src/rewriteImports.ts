@@ -51,7 +51,8 @@ export async function rewriteImports(options: {
   monorepo: boolean;
   files?: string[];
 }) {
-  const rootDir = resolve(process.cwd(), options.dir);
+  const workDir = process.cwd();
+  const rootDir = resolve(workDir, options.dir);
 
   console.log(
     `Rewriting relative paths for files in ${chalk.bold(
@@ -66,7 +67,7 @@ export async function rewriteImports(options: {
       return;
     }
 
-    const relative = path.relative(rootDir, file);
+    const relative = path.relative(workDir, file);
     if (relative && filter.isIgnored(relative)) {
       return;
     }
@@ -94,7 +95,7 @@ export async function rewriteImports(options: {
     await new Promise((resolve, reject) => {
       Walker(startDir)
         .filterDir(function (dir: string, stats: fs.Stats) {
-          const relative = path.relative(rootDir, dir);
+          const relative = path.relative(workDir, dir);
           return !relative || !filter.isIgnored(relative + '/');
         })
         .on('file', handleFile)

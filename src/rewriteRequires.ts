@@ -77,7 +77,8 @@ function fixFile(rootDir: string, file: string) {
 }
 
 export async function rewriteRequires(options: { dir: string }) {
-  const rootDir = path.resolve(process.cwd(), options.dir);
+  const workDir = process.cwd();
+  const rootDir = path.resolve(workDir, options.dir);
 
   console.log(
     `Rewriting ~/* paths in ${chalk.bold(
@@ -90,11 +91,11 @@ export async function rewriteRequires(options: { dir: string }) {
   await new Promise((resolve, reject) => {
     Walker(rootDir)
       .filterDir(function (dir: string, stats: fs.Stats) {
-        const relative = path.relative(rootDir, dir);
+        const relative = path.relative(workDir, dir);
         return !relative || !filter.isIgnored(relative + '/');
       })
       .on('file', function (file: string, stats: fs.Stats) {
-        const relative = path.relative(rootDir, file);
+        const relative = path.relative(workDir, file);
         if (relative && filter.isIgnored(relative)) {
           return;
         }
