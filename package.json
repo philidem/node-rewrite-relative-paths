@@ -18,8 +18,8 @@
   },
   "homepage": "https://github.com/philidem/node-rewrite-relative-paths",
   "bin": {
-    "rewrite-imports": "node ./cli/rewrite-imports",
-    "rewrite-requires": "node ./cli/rewrite-requires"
+    "rewrite-imports": "./cli/rewrite-imports.js",
+    "rewrite-requires": "./cli/rewrite-requires.js"
   },
   "scripts": {
     "postinstall": "husky install || true",
