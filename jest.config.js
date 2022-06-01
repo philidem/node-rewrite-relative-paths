@@ -1,6 +1,5 @@
 module.exports = {
   ...require('@jupiterone/typescript-tools/config/jest'),
-  clearMocks: true,
   collectCoverageFrom: ['src/**/*.ts'],
   coverageThreshold: {
     global: {

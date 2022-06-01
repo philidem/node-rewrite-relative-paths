@@ -3,12 +3,8 @@
   "compilerOptions": {
     "rootDir": ".",
     "baseUrl": ".",
-    "outDir": "dist",
-    "lib": ["ES2019", "DOM"],
-    "target": "ES2019",
-    "module": "commonjs",
-    "incremental": true,
-    "tsBuildInfoFile": "dist/.tsc/tsconfig.tsbuildinfo"
+    "outDir": "./dist",
+    "incremental": true
   },
   "include": ["src/**/*"]
 }

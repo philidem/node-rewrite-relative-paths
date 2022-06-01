@@ -1,8 +1,11 @@
-/* istanbul ignore file */
-import yargs from 'yargs';
-import rewriteImports from '../rewriteImports';
+#!/usr/bin/env node
 
-export async function run() {
+/* istanbul ignore file */
+import chalk from 'chalk';
+import yargs from 'yargs';
+import { rewriteImports } from '~/src/rewriteImports';
+
+async function run() {
   const input = yargs
     .option('d', {
       alias: 'dir',
@@ -33,3 +36,9 @@ export async function run() {
     monorepo: input.monorepo === true,
   });
 }
+
+run().catch((err) => {
+  console.error(
+    chalk.red(`${chalk.bold('Error running command')}. Error: ${err.stack}`)
+  );
+});

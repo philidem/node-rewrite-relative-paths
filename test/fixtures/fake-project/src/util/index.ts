@@ -1,4 +1,4 @@
-import formatUtil from './formatUtil';
 import { XYZ } from '../constants';
+import formatUtil from './formatUtil';
 
 export { formatUtil, XYZ };

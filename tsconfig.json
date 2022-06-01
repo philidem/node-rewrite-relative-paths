@@ -1,11 +1,10 @@
 {
-  "extends": "./node_modules/@jupiterone/typescript-tools/config/typescript-node12",
+  "extends": "./node_modules/@jupiterone/typescript-tools/config/typescript-node14",
   "compilerOptions": {
     "rootDir": ".",
     "baseUrl": ".",
-    "outDir": "dist",
-    "incremental": true,
-    "tsBuildInfoFile": "dist/.tsc/tsconfig.tsbuildinfo"
+    "outDir": ".tsc/",
+    "incremental": true
   },
   "include": ["src/**/*.ts", "test/**/*.ts", "*.js"],
   "exclude": ["test/work/**/*"]

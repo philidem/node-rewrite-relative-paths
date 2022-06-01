@@ -18,17 +18,18 @@
   },
   "homepage": "https://github.com/philidem/node-rewrite-relative-paths",
   "bin": {
-    "rewrite-imports": "./bin/rewrite-imports",
-    "rewrite-requires": "./bin/rewrite-requires"
+    "rewrite-imports": "node ./cli/rewrite-imports",
+    "rewrite-requires": "node ./cli/rewrite-requires"
   },
   "scripts": {
-    "precommit": "lint-staged",
-    "compile": "tsc -d -p tsconfig.dist.json",
+    "postinstall": "husky install || true",
+    "type-check": "tsc",
+    "compile": "ttsc -d -p tsconfig.dist.json",
     "clean": "rm -rf ./dist",
-    "build": "yarn clean && yarn compile && cp -R package.json yarn.lock LICENSE README.md ./src/bin ./dist/src",
+    "build": "yarn clean && yarn compile && cp -R package.json yarn.lock LICENSE README.md ./dist/src",
     "autobuild": "yarn build && (cd ./dist/src && yarn install --production && (yarn unlink || true) && yarn link) && yarn nodemon --exec 'yarn compile' --watch ./src -e ts",
     "lint": "eslint --ext .ts,.tsx,.js,.jsx .",
-    "format-code": "prettier --write '**/*.{js,ts,md,json}'",
+    "format": "prettier --write '**/*.{js,ts,md,json}'",
     "pretest": "rm -rf ./test/work && mkdir -p ./test/work && cp -R ./test/fixtures/fake-project ./test/work",
     "test": "jest .",
     "publish:patch": "yarn version --patch",
@@ -38,14 +39,15 @@
     "postversion": "yarn build && yarn publish --access public --new-version $npm_package_version ./dist/src"
   },
   "devDependencies": {
-    "@jupiterone/typescript-tools": "^13.2.1",
-    "nodemon": "^2.0.4"
+    "@jupiterone/typescript-tools": "^16.0.0",
+    "@types/node": "^14",
+    "nodemon": "^2.0.16"
   },
   "dependencies": {
-    "chalk": "^4.1.0",
-    "ignore": "^5.1.8",
-    "p-queue": "^6.6.2",
-    "walker": "^1.0.7",
-    "yargs": "^16.2.0"
+    "chalk": "^4",
+    "ignore": "^5.2.0",
+    "p-queue": "^6",
+    "walker": "^1.0.8",
+    "yargs": "^17.5.1"
   }
 }

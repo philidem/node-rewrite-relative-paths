@@ -1,9 +1,8 @@
-import PQueue from 'p-queue';
-import fs from 'fs';
-import { promises as fsPromises } from 'fs';
 import chalk from 'chalk';
-import ignore from 'ignore';
-import { dirname, resolve, join, sep } from 'path';
+import fs, { promises as fsPromises } from 'fs';
+import PQueue from 'p-queue';
+import path, { dirname, join, resolve, sep } from 'path';
+import { readIgnoreFiles } from './readIgnoreFiles';
 
 const { readFile, writeFile } = fsPromises;
 
@@ -47,28 +46,7 @@ function fixFile(rootDir: string, file: string) {
     });
 }
 
-async function createIgnoreFilter() {
-  let fileContents: string;
-  try {
-    fileContents = await readFile('.gitignore', { encoding: 'utf8' });
-  } catch (err) {
-    return {
-      isIgnored() {
-        return false;
-      },
-    };
-  }
-
-  const ignoreChecker = ignore().add(fileContents);
-
-  return {
-    isIgnored(file: string) {
-      return file !== '.' && ignoreChecker.ignores(file);
-    },
-  };
-}
-
-export default async function rewriteImports(options: {
+export async function rewriteImports(options: {
   dir: string;
   monorepo: boolean;
   files?: string[];
@@ -81,10 +59,18 @@ export default async function rewriteImports(options: {
     )} so that they use ~/* convention...`
   );
 
-  function handleFile(file: string) {
+  const filter = await readIgnoreFiles();
+
+  const handleFile = function (file: string) {
     if (!file.endsWith('.ts') && !file.endsWith('.tsx')) {
       return;
     }
+
+    const relative = path.relative(rootDir, file);
+    if (relative && filter.isIgnored(relative)) {
+      return;
+    }
+
     if (options.monorepo) {
       const packagesDir = join(rootDir, 'packages');
       if (file.startsWith(packagesDir + sep)) {
@@ -98,30 +84,18 @@ export default async function rewriteImports(options: {
     } else {
       fixFile(rootDir, file);
     }
-  }
+  };
 
   if (options?.files?.length) {
     options.files.forEach(handleFile);
   } else {
-    const filter = await createIgnoreFilter();
     const startDir = options.monorepo ? join(rootDir, 'packages') : rootDir;
 
     await new Promise((resolve, reject) => {
       Walker(startDir)
         .filterDir(function (dir: string, stats: fs.Stats) {
-          if (dir.startsWith(rootDir)) {
-            dir = dir.substring(rootDir.length);
-          }
-
-          if (dir.charAt(0) === sep) {
-            dir = dir.substring(1);
-          }
-
-          if (dir.length === 0) {
-            dir = '.';
-          }
-
-          return filter.isIgnored(dir) ? false : true;
+          const relative = path.relative(rootDir, dir);
+          return !relative || !filter.isIgnored(relative + '/');
         })
         .on('file', handleFile)
         .on('end', function () {

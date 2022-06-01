@@ -1,9 +1,9 @@
-import PQueue from 'p-queue';
-import { promises as fsPromises } from 'fs';
-import fs from 'fs';
 import chalk from 'chalk';
-import ignore from 'ignore';
+import fs, { promises as fsPromises } from 'fs';
+
+import PQueue from 'p-queue';
 import path from 'path';
+import { readIgnoreFiles } from './readIgnoreFiles';
 
 const { readFile, writeFile } = fsPromises;
 
@@ -13,7 +13,8 @@ const queue = new PQueue({ concurrency: 5 });
 
 const DOUBLE_QUOTE_REGEXP = /(require\(")~(\/[^"]+)?(")/g;
 const SINGLE_QUOTE_REGEXP = /(require\(')~((?:\/[^']+)?)(')/g;
-const IMPORT_IN_TYPE_DECLARATION_FILE = /(import\(")((?:src|tools|test|bin)(?:\/[^"]+)?)(")/g;
+const IMPORT_IN_TYPE_DECLARATION_FILE =
+  /(import\(")((?:src|tools|test|bin)(?:\/[^"]+)?)(")/g;
 const IMPORT_FROM_DOUBLE_QUOTE = /(from ")~(\/[^"]+)?(")/g;
 const IMPORT_FROM_SINGLE_QUOTE = /(from ')~(\/[^']+)?(')/g;
 
@@ -75,28 +76,7 @@ function fixFile(rootDir: string, file: string) {
     });
 }
 
-async function createIgnoreFilter() {
-  let fileContents: string;
-  try {
-    fileContents = await readFile('.gitignore', { encoding: 'utf8' });
-  } catch (err) {
-    return {
-      isIgnored() {
-        return false;
-      },
-    };
-  }
-
-  const ignoreChecker = ignore().add(fileContents);
-
-  return {
-    isIgnored(file: string) {
-      return file !== '.' && ignoreChecker.ignores(file);
-    },
-  };
-}
-
-export default async function rewriteRequires(options: { dir: string }) {
+export async function rewriteRequires(options: { dir: string }) {
   const rootDir = path.resolve(process.cwd(), options.dir);
 
   console.log(
@@ -105,26 +85,20 @@ export default async function rewriteRequires(options: { dir: string }) {
     )} so that they are relative...`
   );
 
-  const filter = await createIgnoreFilter();
+  const filter = await readIgnoreFiles();
 
   await new Promise((resolve, reject) => {
     Walker(rootDir)
       .filterDir(function (dir: string, stats: fs.Stats) {
-        if (dir.startsWith(rootDir)) {
-          dir = dir.substring(rootDir.length);
-        }
-
-        if (dir.charAt(0) === '/') {
-          dir = dir.substring(1);
-        }
-
-        if (dir.length === 0) {
-          dir = '.';
-        }
-
-        return filter.isIgnored(dir) ? false : true;
+        const relative = path.relative(rootDir, dir);
+        return !relative || !filter.isIgnored(relative + '/');
       })
       .on('file', function (file: string, stats: fs.Stats) {
+        const relative = path.relative(rootDir, file);
+        if (relative && filter.isIgnored(relative)) {
+          return;
+        }
+
         if (
           file.endsWith('.js') ||
           file.endsWith('.ts') ||

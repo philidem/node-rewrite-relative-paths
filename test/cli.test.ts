@@ -3,6 +3,8 @@ import { promises as fsPromises } from 'fs';
 import path from 'path';
 import { rewriteImports, rewriteRequires } from '../src';
 
+jest.setTimeout(10000);
+
 const { readFile } = fsPromises;
 
 const fakeProjectDir = path.join(__dirname, 'work/fake-project');
