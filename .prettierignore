@@ -2,3 +2,4 @@ coverage/
 work/
 dist/
 .terraform/
+.tsc/
