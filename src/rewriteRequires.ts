@@ -76,7 +76,10 @@ function fixFile(rootDir: string, file: string) {
     });
 }
 
-export async function rewriteRequires(options: { dir: string }) {
+export async function rewriteRequires(options: {
+  dir: string;
+  ignoreFiles: string[];
+}) {
   const workDir = process.cwd();
   const rootDir = path.resolve(workDir, options.dir);
 
@@ -86,7 +89,7 @@ export async function rewriteRequires(options: { dir: string }) {
     )} so that they are relative...`
   );
 
-  const filter = await readIgnoreFiles();
+  const filter = await readIgnoreFiles(options.ignoreFiles);
 
   await new Promise((resolve, reject) => {
     Walker(rootDir)

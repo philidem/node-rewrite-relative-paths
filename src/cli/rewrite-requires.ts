@@ -27,6 +27,7 @@ async function run() {
 
   await rewriteRequires({
     dir: input.dir!,
+    ignoreFiles: ['.gitignore', '.rewriteignore'],
   });
 }
 

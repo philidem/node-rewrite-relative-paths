@@ -23,12 +23,14 @@ beforeAll(async () => {
   await rewriteImports({
     dir: fakeProjectDir,
     monorepo: false,
+    ignoreFiles: [],
   });
 
   build();
 
   await rewriteRequires({
     dir: path.join(fakeProjectDir, 'dist'),
+    ignoreFiles: [],
   });
 });
 

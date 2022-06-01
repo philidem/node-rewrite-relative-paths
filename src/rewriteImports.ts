@@ -50,6 +50,7 @@ export async function rewriteImports(options: {
   dir: string;
   monorepo: boolean;
   files?: string[];
+  ignoreFiles: string[];
 }) {
   const workDir = process.cwd();
   const rootDir = resolve(workDir, options.dir);
@@ -60,7 +61,7 @@ export async function rewriteImports(options: {
     )} so that they use ~/* convention...`
   );
 
-  const filter = await readIgnoreFiles();
+  const filter = await readIgnoreFiles(options.ignoreFiles);
 
   const handleFile = function (file: string) {
     if (!file.endsWith('.ts') && !file.endsWith('.tsx')) {

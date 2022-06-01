@@ -34,6 +34,7 @@ async function run() {
     dir: input.dir!,
     files: input._,
     monorepo: input.monorepo === true,
+    ignoreFiles: ['.gitignore', '.rewriteignore'],
   });
 }
 
