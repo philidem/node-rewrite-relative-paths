@@ -22,7 +22,7 @@
     "rewrite-requires": "./cli/rewrite-requires.js"
   },
   "scripts": {
-    "postinstall": "husky install || true",
+    "prepare": "husky install || true",
     "type-check": "tsc",
     "compile": "ttsc -d -p tsconfig.dist.json",
     "clean": "rm -rf ./dist",
